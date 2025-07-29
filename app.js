@@ -1,4 +1,5 @@
 // 1) Import required packages
+require('dotenv').config() // ✅ Load environment variables from .env
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
@@ -17,21 +18,22 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/uploads', express.static('uploads'))
 
 // 6) MongoDB connection
-const database = "mongodb+srv://hungnvtgch230171:CkGtqK8se3xq97y0@doge.40oygcb.mongodb.net/wander-log"
-mongoose.connect(database)
+const mongoUri = process.env.MONGO_URI
+
+mongoose.connect(mongoUri)
   .then(() => console.log("Connected to MongoDB Atlas"))
   .catch((err) => console.error("MongoDB connection failed:", err))
 
-// 7) Register your main travel routes
+// 7) Register main travel routes
 const router = require('./api/routes/travelRoute')
 router(app)
 
-// 8) Register auth routes (new!)
+// 8) Register auth routes
 const authRoutes = require('./api/routes/travelAuth')
 app.use('/auth', authRoutes)
 
 // 9) Start the server
 const port = process.env.PORT || 3000
 app.listen(port, () => {
-  console.log(`WanderLog backend running at http://localhost:${port}`)
+  console.log(`WanderLog backend is running!`)
 })

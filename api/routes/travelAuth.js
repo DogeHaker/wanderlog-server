@@ -4,7 +4,7 @@ const User = require('../models/travelUsers')
 const jwt = require('jsonwebtoken')
 
 // Secret key for JWT
-const JWT_SECRET = 'sigmaskibidi' // move to .env later
+const JWT_SECRET = process.env.JWT_SECRET || 'fallbackSecret' // move to .env later
 
 // Register
 router.post('/register', async (req, res) => {

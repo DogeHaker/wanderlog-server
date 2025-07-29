@@ -11,7 +11,7 @@ const TravelRoute = (app) => {
             return res.status(400).json({ message: "No file uploaded" })
         }
 
-        const fileUrl = `http://localhost:3000/uploads/${req.file.filename}`
+        const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
         res.status(200).json({ imageUrl: fileUrl })
         })
     // group API without id

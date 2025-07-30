@@ -17,7 +17,7 @@ const TravelSchema = new mongoose.Schema({
     },
     status: { 
         type: String, 
-        enum: ['visited', 'wishlist'], 
+        enum: ['visited', 'wishlist', 'planned'], 
         default: 'wishlist' 
     },
     imageUrl: {

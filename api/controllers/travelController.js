@@ -80,18 +80,34 @@ const updateTravel = async (req, res) => {
   if (!userId) return res.status(401).json({ message: 'Missing or invalid token' })
 
   try {
-    const update = { ...req.body }
+    const { place, notes, status, favorite, imageUrl, travelDate } = req.body
 
-    // Check and update status if needed
-    if (
-      update.status === 'wishlist' &&
-      update.travelDate &&
-      new Date(update.travelDate) > new Date()
-    ) {
-      update.status = 'planned'
+    // Determine correct status
+    let finalStatus = status
+    if (status === 'wishlist' && travelDate && new Date(travelDate) > new Date()) {
+      finalStatus = 'planned'
     }
 
-    await Travel.findOneAndUpdate({ _id: req.params.id, userId }, update)
+    // Only allow updating these fields — createdAt is NOT included
+    const update = {
+      place,
+      notes,
+      favorite,
+      imageUrl,
+      travelDate,
+      status: finalStatus
+    }
+
+    const result = await Travel.findOneAndUpdate(
+      { _id: req.params.id, userId },
+      { $set: update },
+      { new: true }
+    )
+
+    if (!result) {
+      return res.status(404).json({ message: 'Travel log not found' })
+    }
+
     res.json({ message: 'Update travel log succeed!' })
   } catch (err) {
     res.status(400).send(err)
